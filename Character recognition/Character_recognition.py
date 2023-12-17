@@ -168,14 +168,25 @@ def u_gen_rand_hv_sparse(D):
         return 0
     
     #use long index list, generate range and then permute them and set all numbers < p*D to 1 to get better density !! (random indexing also faster)
-    hv = [*range(D)]
-    np.random.shuffle(hv)
-    for i in range(len(hv)):
-        if hv[i] < p_sparse*D:
-          hv[i] = 1
-        else:
-          hv[i] = 0
+    # hv = [*range(D)]
+    # np.random.shuffle(hv)
+    # for i in range(len(hv)):
+    #     if hv[i] < p_sparse*D:
+    #       hv[i] = 1
+    #     else:
+    #       hv[i] = 0
+    # return hv
+    hv = [0]*D
+    segment_length = math.floor(1/p_sparse)
+    for j in range(math.floor(D/segment_length)):
+      segment = [*range(segment_length)]
+      np.random.shuffle(segment)
+      for i in range(len(segment)):
+        if segment[i] != 1:
+          segment[i] = 0
+      hv[j*segment_length:(j+1)*segment_length] = segment
     return hv
+
 
 
 
